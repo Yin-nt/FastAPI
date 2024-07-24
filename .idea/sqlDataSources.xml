@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="5c2bf989-c6e4-4c83-b9ed-3252c712dd9f" name="FastAPI MySQL Mapping">
+      <data-sources db="495f3bd2-8d57-44b1-82e9-da0be2d99f1a" />
+    </mapping>
+  </component>
+</project>

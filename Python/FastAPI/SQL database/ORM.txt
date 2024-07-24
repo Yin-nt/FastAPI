@@ -1,0 +1,4 @@
+1. ORM
+    -  an "object-relational mapping" library.
+    - create a class that represents a table in a SQL database, each attribute of the class represents a column, with a
+    name and a type.
