@@ -1,4 +1,4 @@
-#tệp chứa các models SQLAlchemy
+#tệp chứa các models SQLAlchemy, chứa dữ liệu
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
@@ -10,7 +10,6 @@ class User(Base):
     email = Column(String(255)  , unique=True, index=True)
     hashed_password = Column(String(255))
     is_active = Column(Boolean, default=True)
-
     items = relationship("Item", back_populates="owner")
 
 

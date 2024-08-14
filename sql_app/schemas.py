@@ -1,4 +1,4 @@
-#Tệp chứa các mô hình Pydantic (định nghĩa một schema)
+#Tệp chứa các mô hình Pydantic (định nghĩa một schema), chưá dữ liệu trả về
 from typing import Union
 
 from pydantic import BaseModel
@@ -28,7 +28,7 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
-
+#response model => khi trả về dữ liệu trên doc không có password
 class User(UserBase):
     id: int
     is_active: bool
@@ -36,6 +36,9 @@ class User(UserBase):
 
     class Config:
         from_attributes = True
+class ShowUsers(BaseModel):
+    email: str
+    items: list[Item] = []
 
 '''
 - Phân biệt SQLAlchemy và Pydantic:
