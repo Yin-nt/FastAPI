@@ -13,9 +13,9 @@ class CreateUser(UserBase):
     address: str
 
 class ShowUser(UserBase):
-    fullname: str
-    DOB: datetime
-    address: str
+    fullname: Union[str, None] = None
+    DOB: Union[datetime, None] = None
+    address: Union[str, None] = None
     class Config:
         from_attributes = True
 class GroupBase(BaseModel):

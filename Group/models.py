@@ -3,15 +3,14 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, E
 from sqlalchemy.orm import relationship
 from Group.database import Base
 
-
 class User(Base):
-    __tablename__ = 'User'
+    __tablename__ = "User"
     id = Column(Integer, primary_key=True)
     email = Column(String(255), unique=True, nullable=False, index=True)
     password = Column(String(255))
-    fullname = Column(String)
+    fullname = Column(String(255))
     DOB = Column(DateTime)
-    Address = Column(String)
+    Address = Column(String(255))
 
     # Relationships
     groups = relationship("Group", secondary="Group_member", back_populates="members")
@@ -22,9 +21,9 @@ class User(Base):
 
 
 class Group(Base):
-    __tablename__ = 'Group'
+    __tablename__ = "Group"
     id = Column(Integer, primary_key=True)
-    group_name = Column(String, unique=True, nullable=False)
+    group_name = Column(String(255), unique=True, nullable=False)
 
     # Relationships
     members = relationship("User", secondary="Group_member", back_populates="groups")
@@ -50,7 +49,7 @@ class Group_member(Base):
 class Role(Base):
     __tablename__ = 'Role'
     id = Column(Integer, primary_key=True)
-    role_name = Column(String, nullable=False)
+    role_name = Column(String(255), nullable=False)
 
     # Relationships
     group_members = relationship("Group_member", back_populates="role")
@@ -59,8 +58,8 @@ class Role(Base):
 class Blog(Base):
     __tablename__ = 'Blog'
     id = Column(Integer, primary_key=True)
-    title = Column(String, nullable=False)
-    content = Column(String, nullable=False)
+    title = Column(String(255), nullable=False)
+    content = Column(String(255), nullable=False)
     author_id = Column(Integer, ForeignKey('User.id'))
     group_id = Column(Integer, ForeignKey('Group.id'))
     permission = Column(Boolean, default=False)  # private
@@ -74,7 +73,7 @@ class Blog(Base):
 
 
 class Join_request(Base):
-    __tablename__ = 'Join_request'
+    __tablename__ = "Join_request"
     id = Column(Integer, primary_key=True)
     inviter_id = Column(Integer, ForeignKey('User.id'), default=None)
     invitee_id = Column(Integer, ForeignKey('User.id'))
