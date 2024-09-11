@@ -1,7 +1,7 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI
 from Group import models
-from Group.database import SessionLocal, engine
-from Group.routers import user, authentication, group, role, member
+from Group.database import engine
+from Group.routers import user, authentication, group, role, member, join_request
 
 app = FastAPI()
 
@@ -12,3 +12,4 @@ app.include_router(user.router)
 app.include_router(group.router)
 app.include_router(role.router)
 app.include_router(member.router)
+app.include_router(join_request.router)

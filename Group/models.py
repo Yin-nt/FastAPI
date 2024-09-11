@@ -75,10 +75,10 @@ class Blog(Base):
 class Join_request(Base):
     __tablename__ = "Join_request"
     id = Column(Integer, primary_key=True)
-    inviter_id = Column(Integer, ForeignKey('User.id'), default=None)
+    inviter_id = Column(Integer, ForeignKey('User.id'), nullable=True)
     invitee_id = Column(Integer, ForeignKey('User.id'))
     group_id = Column(Integer, ForeignKey('Group.id'))
-    status = Column(Enum('Accepted', 'Rejected', 'Pending', 'Self join'))
+    status = Column(Enum('Accepted', 'Rejected', 'Pending', 'Self join'), default='Pending')
     creat_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships

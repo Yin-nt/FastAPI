@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Union
 from enum import Enum
-from datetime import date
+from datetime import date, datetime
 
 class UserBase(BaseModel):
     email: str
@@ -54,17 +54,17 @@ class ShowMembers(BaseModel):
 
 
 class JoinRequestStatus(str, Enum):
-    accepted = 'accepted'
-    rejected = 'rejected'
-    pending = 'pending'
-    self_joined = 'self joined'
+    accepted = 'Accepted'
+    rejected = 'Rejected'
+    pending = 'Pending'
+    self_joined = 'Self join'
 
 class JoinRequestBase(BaseModel):
     inviter_id: Union[int, None] = None
     invitee_id: int
     group_id: int
-    creat_at: date
-    status: JoinRequestStatus
+    creat_at: datetime
+    status: JoinRequestStatus = JoinRequestStatus.pending
 
 class CreatJoinRequest(JoinRequestBase):
     pass
@@ -74,7 +74,7 @@ class JoinRequestUpdate(BaseModel):
 class ShowJoinRequest(JoinRequestBase):
     inviter: Union['ShowUser', None] = None
     invitee: 'ShowUser'
-    Group: 'ShowGroup'
+    group: 'ShowGroup'
     class Config:
         from_attributes = True
 class RoleBase(BaseModel):

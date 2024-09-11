@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
-from Group import database, models, schemas
-from Group.core import hashing
+from Group import models, schemas
 
 def create_group(db: Session, group: schemas.CreateGroup):
     db_group = models.Group(group_name=group.group_name)

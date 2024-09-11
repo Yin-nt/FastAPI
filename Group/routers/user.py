@@ -18,8 +18,8 @@ def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
     return crud_user.create_user(db=db, user=user)
 
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
-def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
-    user = db.query(models.User).filter(models.User.id == id).first()
+def destroy(db: Session = Depends(get_db), current_user: schemas.TokenData = Depends(oauth2.get_current_user)):
+    user = crud_user.get_user_by_email(db, email=current_user.username)
     if not user:
         raise HTTPException(detail='Không tìm thấy người dùng!',status_code=status.HTTP_404_NOT_FOUND)
     db.delete(user)
@@ -29,17 +29,17 @@ def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User =
 # def update(user_id: int , request: schemas.CreateUser, db: Session = Depends(get_db)):
 #     pass
 
-@router.get("/", response_model=list[schemas.ShowUser])
-def read_users(current_user: schemas.User = Depends(oauth2.get_current_user),
-        skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    users = crud_user.get_users(db, skip=skip, limit=limit)
-    return users
+# @router.get("/", response_model=list[schemas.ShowUser])
+# def read_users(current_user: schemas.TokenData = Depends(oauth2.get_current_user),
+#         skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+#     users = crud_user.get_users(db, skip=skip, limit=limit)
+#     return users
 
 
 @router.get("/{user_id}", response_model=schemas.ShowUser)
 def read_user(user_id: int, db: Session = Depends(get_db),
-              current_user: schemas.User = Depends(oauth2.get_current_user)):
-    db_user = crud_user.get_user(db, user_id=user_id)
+              current_user: schemas.TokenData = Depends(oauth2.get_current_user)):
+    db_user = crud_user.get_user_by_email(db, email=current_user.username)
     if db_user is None:
         raise HTTPException(status_code=404, detail="Không tìm thấy người dùng!")
     return db_user

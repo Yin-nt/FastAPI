@@ -2,13 +2,7 @@ from sqlalchemy.orm import Session
 from Group import models, schemas
 from sqlalchemy import and_
 
-# def get_member_by_user_and_group_id(db: Session, user_id: int, group_id: int):
-#     return db.query(models.Group_member).filter(
-#         and_(
-#             models.Group_member.user_id == user_id,
-#             models.Group_member.group_id == group_id
-#         )
-#     ).first()
+
 def create_member(db: Session, member: schemas.CreateMember):
     # user_exists = db.query(models.User).filter(models.User.id == member.user_id).first()
     # group_exists = db.query(models.Group).filter(models.Group.id == member.group_id).first()
@@ -41,6 +35,8 @@ def get_member_by_user_and_group_id( db: Session, user_id: int, group_id: int):
             models.Group_member.group_id == group_id
         )
     ).first()
+def get_member_by_user_id(db: Session, user_id: int):
+    return db.query(models.Group_member).filter(models.Group_member.user_id == user_id).first()
 def is_admin(db: Session, user_id: int, group_id: int):
     member = db.query(models.Group_member).filter(
         models.Group_member.user_id == user_id,
@@ -50,3 +46,14 @@ def is_admin(db: Session, user_id: int, group_id: int):
         return False
     role = db.query(models.Role).filter(models.Role.id == member.role_id).first()
     return role.role_name == "admin"
+def is_member(db: Session, inviter_id: int, group_id: int, is_approved: bool = True):
+    member = db.query(models.Group_member).filter(
+        models.Group_member.group_id == group_id,
+        models.Group_member.user_id == inviter_id)
+    if is_approved:
+        member = member.filter(models.Group_member.is_approve == True)
+    result = member.first()
+    if result is None:
+        return False
+    return True
+
