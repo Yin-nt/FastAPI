@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 from sql_app import models
 from sql_app.database import engine
-from sql_app.routers import item, user
+from sql_app.routers import item, user, authentication
+
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
 
 app.include_router(item.router)
 app.include_router(user.router)
-
+app.include_router(authentication.router)
 
 
 #Kiểm tra xem bảng có tồn tại không, nếu không thì tạo bảng mới, nếu có thì giữ nguyên

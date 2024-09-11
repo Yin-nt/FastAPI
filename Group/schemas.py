@@ -1,43 +1,50 @@
 from pydantic import BaseModel, Field
 from typing import List, Union
 from enum import Enum
-from datetime import datetime
-
+from datetime import date
 
 class UserBase(BaseModel):
     email: str
 class CreateUser(UserBase):
     password: str
     fullname: str
-    DOB: datetime
+    DOB: date
     address: str
 
 class ShowUser(UserBase):
-    fullname: Union[str, None] = None
-    DOB: Union[datetime, None] = None
-    address: Union[str, None] = None
+    fullname: str
+    DOB: date
+    address: str
+    class Config:
+        from_attributes = True
+class User(BaseModel):
+    id: int
+    email: str
+    fullname: str
+    DOB: date
+    address: str
     class Config:
         from_attributes = True
 class GroupBase(BaseModel):
     group_name: str
 
-class CreatGroup(GroupBase):
+class CreateGroup(GroupBase):
     pass
 
 class ShowGroup(GroupBase):
-    group_id: int
+    pass
 class GroupMemberBase(BaseModel):
     user_id: int
     group_id: int
-    role: str
-    join_date: str
+    role_id: int
+    join_date: date
 
-class CreatMember(BaseModel):
-    is_approved: bool
+class CreateMember(BaseModel):
+    is_approve: bool
     group_id: int
     user_id: int
-    role: str
-    join_date: datetime
+    role_id: int
+    join_date: date
 
 class ShowMember(GroupMemberBase):
     pass
@@ -56,7 +63,7 @@ class JoinRequestBase(BaseModel):
     inviter_id: Union[int, None] = None
     invitee_id: int
     group_id: int
-    creat_at: datetime
+    creat_at: date
     status: JoinRequestStatus
 
 class CreatJoinRequest(JoinRequestBase):
@@ -72,11 +79,9 @@ class ShowJoinRequest(JoinRequestBase):
         from_attributes = True
 class RoleBase(BaseModel):
     role_name: str
-    user_id: int
-    group_id: int
 
 class ShowRole(RoleBase):
-    role_id: int
+    id: int
     class Config:
         from_attributes = True
 class CreateRole(RoleBase):
@@ -108,8 +113,18 @@ class BlogBase(BaseModel):
 
 class CreatBlog(BlogBase):
     permission: bool = False
-    creat_at: datetime = Field(default_factory=datetime.now)
-    update_at: datetime = Field(default_factory=datetime.now)
+    creat_at: date = Field(default=date.today())
+    update_at: date = Field(default=date.today())
 class ShowBlog(BlogBase):
-    creat_at: datetime = Field(default_factory=datetime.now)
-    update_at: datetime = Field(default_factory=datetime.now)
+    creat_at: date = Field(default=date.today())
+    update_at: date = Field(default=date.today())
+
+class Login(BaseModel):
+    username: str
+    password: str
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: Union[str, None] = None

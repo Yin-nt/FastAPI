@@ -1,5 +1,5 @@
 #Tệp chứa các mô hình Pydantic (định nghĩa một schema), chưá dữ liệu trả về
-from typing import Union
+from typing import Union, List
 
 from pydantic import BaseModel
 
@@ -40,6 +40,15 @@ class ShowUsers(BaseModel):
     email: str
     items: list[Item] = []
 
+class Login(BaseModel):
+    username: str
+    password: str
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: Union[str, None] = None
 '''
 - Phân biệt SQLAlchemy và Pydantic:
     SQLAlchemy: name = Column(String)

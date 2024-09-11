@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Enum, Date
 from sqlalchemy.orm import relationship
 from Group.database import Base
 
@@ -9,8 +9,8 @@ class User(Base):
     email = Column(String(255), unique=True, nullable=False, index=True)
     password = Column(String(255))
     fullname = Column(String(255))
-    DOB = Column(DateTime)
-    Address = Column(String(255))
+    DOB = Column(Date)
+    address = Column(String(255))
 
     # Relationships
     groups = relationship("Group", secondary="Group_member", back_populates="members")
@@ -38,7 +38,7 @@ class Group_member(Base):
     role_id = Column(Integer, ForeignKey('Role.id'))
     group_id = Column(Integer, ForeignKey('Group.id'))
     user_id = Column(Integer, ForeignKey('User.id'))
-    join_date = Column(DateTime)
+    join_date = Column(Date)
 
     # Relationships
     user = relationship("User")
@@ -63,7 +63,7 @@ class Blog(Base):
     author_id = Column(Integer, ForeignKey('User.id'))
     group_id = Column(Integer, ForeignKey('Group.id'))
     permission = Column(Boolean, default=False)  # private
-    creat_at = Column(DateTime, default=datetime.utcnow)
+    creat_at = Column(DateTime, default=datetime)
     update_at = Column(DateTime, default=datetime)
 
     # Relationships

@@ -4,17 +4,18 @@ from sql_app import database, crud, models, schemas
 from sql_app.routers import item
 
 router = APIRouter(
-    # tags='Users'
+    prefix='/users',
+     tags=["Users"]
 )
 get_db = database.get_db
-@router.post("/users/", response_model=schemas.User)
+@router.post("/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     return crud.create_user(db=db, user=user)
 
-@router.delete('/users/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 def destroy(id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id).first() # first() returns the first  that match the
     # condition
@@ -23,16 +24,16 @@ def destroy(id: int, db: Session = Depends(get_db)):
     db.delete(user)
     db.commit()
     return {'detail': 'User deleted'}
-@router.put("/users/{user_id}", status_code= status.HTTP_202_ACCEPTED)
+@router.put("/{user_id}", status_code= status.HTTP_202_ACCEPTED)
 def update(id, request: schemas.User, df: Session = Depends(get_db)):
     pass
-@router.get("/users/", response_model=list[schemas.User])
+@router.get("/", response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
 
 
-@router.get("/users/{user_id}", response_model=schemas.ShowUsers) # only show email and item
+@router.get("/{user_id}", response_model=schemas.ShowUsers) # only show email and item
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:

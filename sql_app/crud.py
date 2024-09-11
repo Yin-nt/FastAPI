@@ -1,8 +1,8 @@
 #Các hàm để tương tác với dữ liệu (Crud = Creat, read, update, delete)
 from sqlalchemy.orm import Session #chấp nhận khai báo tham số db
-from passlib.context import CryptContext # creat hashed password
-from sql_app import models, schemas
-pwd_cxt = CryptContext(schemes=['bcrypt'], deprecated='auto')
+# creat hashed password
+from sql_app import models, schemas, hashing
+# pwd_cxt = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 #đọc 1 user bằng id
 #db: Session là một phiên làm việc SQLAlchemy được tiêm vào (injected) vào hàm get_user thông qua dependency injection
@@ -19,7 +19,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 #offset(): số bản ghi bỏ qua tính từ đầu
 #limit(): số lượng bản ghi tối đa trả về
 def create_user(db: Session, user: schemas.UserCreate):
-    fake_hashed_password = pwd_cxt.hash(user.password)
+    fake_hashed_password = hashing.Hash.bcrypt(user.password)
     db_user = models.User(email=user.email, hashed_password=fake_hashed_password)
     db.add(db_user) # Thêm vào database
     db.commit() # Lưu thay đổi
