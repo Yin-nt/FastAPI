@@ -4,20 +4,20 @@ from sqlalchemy import and_
 
 
 def create_member(db: Session, member: schemas.CreateMember):
-    # user_exists = db.query(models.User).filter(models.User.id == member.user_id).first()
-    # group_exists = db.query(models.Group).filter(models.Group.id == member.group_id).first()
-    # role_exists = db.query(models.Role).filter(models.Role.id == member.role_id).first()
-    # if not user_exists:
-    #     raise ValueError("User không tồn tại.")
-    # if not group_exists:
-    #     raise ValueError("Group không tồn tại.")
-    # if not role_exists:
-    #     raise ValueError("Role không tồn tại.")
+    user_exists = db.query(models.User).filter(models.User.id == member.user_id).first()
+    group_exists = db.query(models.Group).filter(models.Group.id == member.group_id).first()
+    role_exists = db.query(models.Role).filter(models.Role.id == member.role_id).first()
+    if not user_exists:
+        raise ValueError("User không tồn tại.")
+    if not group_exists:
+        raise ValueError("Group không tồn tại.")
+    if not role_exists:
+        raise ValueError("Role không tồn tại.")
     db_member = models.Group_member(
         user_id=member.user_id,
         group_id=member.group_id,
         role_id=member.role_id,
-        is_approve=member.is_approve,
+        is_approve=False,
         join_date=member.join_date
     )
     db.add(db_member)
@@ -56,4 +56,13 @@ def is_member(db: Session, inviter_id: int, group_id: int, is_approved: bool = T
     if result is None:
         return False
     return True
+
+
+def update_member(db: Session, user_id: int, group_id: int):
+    member = db.query(models.Group_member).filter(models.Group_member.user_id == user_id,
+                                                  models.Group_member.group_id == group_id).first()
+    member.is_approve = True
+    db.commit()
+    db.refresh(member)
+    return member
 

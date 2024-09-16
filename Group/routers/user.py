@@ -10,12 +10,12 @@ router = APIRouter(
     tags=["User"]
 )
 get_db = database.get_db
-@router.post("/", response_model=schemas.ShowUser)
-def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
-    db_user = crud_user.get_user_by_email(db, email=user.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email đã tồn tại!")
-    return crud_user.create_user(db=db, user=user)
+# @router.post("/", response_model=schemas.ShowUser)
+# def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
+#     db_user = crud_user.get_user_by_email(db, email=user.email)
+#     if db_user:
+#         raise HTTPException(status_code=400, detail="Email đã tồn tại!")
+#     return crud_user.create_user(db=db, user=user)
 
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 def destroy(db: Session = Depends(get_db), current_user: schemas.TokenData = Depends(oauth2.get_current_user)):
