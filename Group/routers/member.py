@@ -29,6 +29,9 @@ def read_all_member_of_group(
         group_id: int, skip: int = 0, limit: int = 100,
         current_user: schemas.TokenData = Depends(oauth2.get_current_user),
         db: Session = Depends(get_db),):
+    user = crud_user.get_user_by_email(db, email=current_user.email)
+    if not user:
+        raise HTTPException(status_code=404, detail="Không tồn tại user.")
     members = crud_member.get_all_members(db=db, group_id=group_id, skip=skip, limit=limit)
     if not members:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Không tìm thấy thành viên nào.")
@@ -41,6 +44,8 @@ def delete_member(
         current_user: schemas.TokenData = Depends(oauth2.get_current_user),
         db: Session = Depends(get_db)):
     user = crud_user.get_user_by_email(db, email=current_user.username)
+    if not user:
+        raise HTTPException(status_code=404, detail="Không tồn tại user.")
     if not crud_member.is_admin(db, user.id, group_id):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Bạn không có quyền xóa thành viên.")
     db_member = db.query(models.Group_member).filter(

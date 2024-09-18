@@ -69,6 +69,8 @@ class JoinRequestBase(BaseModel):
 class CreatJoinRequest(JoinRequestBase):
     pass
 class JoinRequestUpdate(BaseModel):
+    invitee_id: int
+    group_id: int
     status: JoinRequestStatus # Cap nhat trang thai tham gia nhom
 
 class ShowJoinRequest(JoinRequestBase):
@@ -108,16 +110,23 @@ class ReactionShow(ReactionBase):
 class BlogBase(BaseModel):
     title: str
     content: str
+
+class CreateBlog(BlogBase):
     group_id: int
     author_id: int
-
-class CreatBlog(BlogBase):
     permission: bool = False
-    creat_at: date = Field(default=date.today())
-    update_at: date = Field(default=date.today())
-class ShowBlog(BlogBase):
-    creat_at: date = Field(default=date.today())
-    update_at: date = Field(default=date.today())
+    create_at: datetime
+    update_at: datetime
+class ShowBlog(BaseModel):
+    title: str
+    content: str
+    group: 'ShowGroup'
+    author: 'ShowUser'
+    create_at: datetime
+    update_at: datetime
+class UpdateBlog(BlogBase):
+    permission: bool = False
+    update_at: datetime
 
 class Login(BaseModel):
     username: str

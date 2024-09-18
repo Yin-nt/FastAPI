@@ -63,7 +63,7 @@ class Blog(Base):
     author_id = Column(Integer, ForeignKey('User.id'))
     group_id = Column(Integer, ForeignKey('Group.id'))
     permission = Column(Boolean, default=False)  # private
-    creat_at = Column(DateTime, default=datetime)
+    create_at = Column(DateTime, default=datetime)
     update_at = Column(DateTime, default=datetime)
 
     # Relationships

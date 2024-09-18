@@ -17,12 +17,17 @@ def create_request(db: Session, join_request: schemas.CreatJoinRequest):
     return db_request
 
 
-def update_request(db: Session, request_id: int, update_data: schemas.JoinRequestUpdate):
-    db_request = db.query(models.Join_request).filter(models.Join_request.id == request_id).first()
+def update_request(db: Session, update_data: schemas.JoinRequestUpdate):
+    db_request = db.query(models.Join_request).filter(
+        models.Join_request.invitee_id == update_data.invitee_id,
+        models.Join_request.group_id == update_data.group_id
+        ).first()
     if db_request:
         db_request.status = update_data.status
         db.commit()
         db.refresh(db_request)
+    else:
+        return None
     if db_request.status == "Accepted":
         existing_member = db.query(models.Group_member).filter(
             models.Group_member.user_id == db_request.invitee_id,
@@ -41,5 +46,7 @@ def update_request(db: Session, request_id: int, update_data: schemas.JoinReques
     return db_request
 
 
-def get_request(db: Session, request_id: int):
-    return db.query(models.Join_request).filter(models.Join_request.id == request_id).first()
+def get_request(db: Session, invitee_id: int, group_id: int):
+    return db.query(models.Join_request).filter(
+        models.Join_request.invitee_id == invitee_id,
+        models.Join_request.group_id == group_id).first()

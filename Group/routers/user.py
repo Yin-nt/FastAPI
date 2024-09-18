@@ -7,7 +7,7 @@ from Group.crud import crud_user
 
 router = APIRouter(
     prefix="/users",
-    tags=["User"]
+    tags=["Users"]
 )
 get_db = database.get_db
 # @router.post("/", response_model=schemas.ShowUser)
