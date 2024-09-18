@@ -10,8 +10,12 @@ get_db = database.get_db
 
 
 @router.post("/members", response_model=schemas.ShowMember)
-def create_member(member: schemas.CreateMember, db: Session = Depends(get_db)):
-    db_member = crud_member.get_member_by_user_and_group_id(db, user_id=member.user_id, group_id=member.group_id)
+def create_member(member: schemas.CreateMember, db: Session = Depends(get_db),
+                  current_user: schemas.TokenData = Depends(oauth2.get_current_user)):
+    user = crud_user.get_user_by_email(db, email=current_user.username)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Không tìm thấy user.")
+    db_member = crud_member.get_member_by_user_and_group_id(db, user_id=user.id, group_id=member.group_id)
     if db_member:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User đã tồn tại trong group.")
     return crud_member.create_member(db=db, member=member)
@@ -57,5 +61,3 @@ def delete_member(
     db.delete(db_member)
     db.commit()
     return {"detail": "Đã xóa thành viên."}
-
-

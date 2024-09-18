@@ -50,3 +50,15 @@ def get_request(db: Session, invitee_id: int, group_id: int):
     return db.query(models.Join_request).filter(
         models.Join_request.invitee_id == invitee_id,
         models.Join_request.group_id == group_id).first()
+
+
+def get_request_by_id(db: Session, request_id):
+    return db.query(models.Join_request).filter(models.Join_request.id == request_id).first()
+
+
+def is_pending_request(db: Session, invitee_id: int, group_id: int):
+    return db.query(models.Join_request).filter(
+        models.Join_request.invitee_id == invitee_id,
+        models.Join_request.group_id == group_id,
+        models.Join_request.status == 'pending'  # Kiểm tra trạng thái pending
+    ).first() is not None
