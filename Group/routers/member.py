@@ -57,3 +57,5 @@ def delete_member(
     db.delete(db_member)
     db.commit()
     return {"detail": "Đã xóa thành viên."}
+
+

@@ -24,19 +24,29 @@ def create_member(db: Session, member: schemas.CreateMember):
     db.commit()
     db.refresh(db_member)
     return db_member
+
+
 def get_member_by_id(db: Session, member_id: int):
     return db.query(models.Group_member).filter(models.Group_member.id == member_id).first()
-def get_all_members(db: Session, group_id: int, skip: int=0, limit: int=100):
+
+
+def get_all_members(db: Session, group_id: int, skip: int = 0, limit: int = 100):
     return db.query(models.Group_member).filter(
         models.Group_member.group_id == group_id).offset(skip).limit(limit).all()
-def get_member_by_user_and_group_id( db: Session, user_id: int, group_id: int):
+
+
+def get_member_by_user_and_group_id(db: Session, user_id: int, group_id: int):
     return db.query(models.Group_member).filter(and_(
             models.Group_member.user_id == user_id,
             models.Group_member.group_id == group_id
         )
     ).first()
+
+
 def get_member_by_user_id(db: Session, user_id: int):
     return db.query(models.Group_member).filter(models.Group_member.user_id == user_id).first()
+
+
 def is_admin(db: Session, user_id: int, group_id: int):
     member = db.query(models.Group_member).filter(
         models.Group_member.user_id == user_id,
@@ -46,6 +56,8 @@ def is_admin(db: Session, user_id: int, group_id: int):
         return False
     role = db.query(models.Role).filter(models.Role.id == member.role_id).first()
     return role.role_name == "admin"
+
+
 def is_member(db: Session, inviter_id: int, group_id: int, is_approved: bool = True):
     member = db.query(models.Group_member).filter(
         models.Group_member.group_id == group_id,
@@ -65,4 +77,3 @@ def update_member(db: Session, user_id: int, group_id: int):
     db.commit()
     db.refresh(member)
     return member
-

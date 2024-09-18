@@ -25,6 +25,16 @@ class User(BaseModel):
     address: str
     class Config:
         from_attributes = True
+
+class UpdateInfoUser(BaseModel):
+    fullname: str
+    DOB: date
+    address: str
+
+class ChangePassword(BaseModel):
+    old_password: str
+    new_password: str
+
 class GroupBase(BaseModel):
     group_name: str
 
